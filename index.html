@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário — Equipe</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top, #252525 0%, #101010 45%, #050505 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(20, 20, 20, 0.96);
+            border: 1px solid #333;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 0 35px rgba(0,0,0,.6);
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #ff1e1e, #8b0000);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: bold;
+            box-shadow: 0 0 25px rgba(255,0,0,.25);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ddd;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            background: #111;
+            border: 1px solid #383838;
+            color: white;
+            border-radius: 10px;
+            padding: 13px;
+            outline: none;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #ff3030;
+            box-shadow: 0 0 0 2px rgba(255,48,48,.12);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .location-info {
+            margin-top: 18px;
+            background: #171717;
+            border: 1px solid #292929;
+            border-radius: 10px;
+            padding: 12px;
+            color: #999;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border: none;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #ff3030, #b30000);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .success {
+            display: block;
+            background: #123d20;
+            color: #6cff91;
+            border: 1px solid #1d6935;
+        }
+
+        .error {
+            display: block;
+            background: #421616;
+            color: #ff7777;
+            border: 1px solid #742525;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">H</div>
+
+    <h1>Formulário da Equipe</h1>
+
+    <p class="description">
+        Preencha o formulário abaixo para se candidatar
+        à equipe de suporte ou administração.
+    </p>
+
+    <form id="formulario">
+
+        <label for="cargo">Cargo desejado</label>
+
+        <select id="cargo" required>
+            <option value="">Selecione uma opção</option>
+            <option value="Suporte">🛠️ Suporte</option>
+            <option value="Administrador">👑 Administrador</option>
+        </select>
+
+        <label for="nick">Nick do Discord</label>
+
+        <input
+            type="text"
+            id="nick"
+            placeholder="Ex: Leafar"
+            maxlength="100"
+            required
+        >
+
+        <label for="idade">Idade</label>
+
+        <input
+            type="number"
+            id="idade"
+            placeholder="Ex: 16"
+            min="1"
+            max="100"
+            required
+        >
+
+        <label for="motivo">Por que você quer entrar para a equipe?</label>
+
+        <textarea
+            id="motivo"
+            placeholder="Explique por que você seria uma boa escolha..."
+            maxlength="1500"
+            required
+        ></textarea>
+
+        <div class="location-info">
+            📍 Ao enviar o formulário, seu navegador solicitará
+            permissão para acessar sua localização. A localização
+            somente será enviada se você permitir.
+        </div>
+
+        <button type="submit" id="enviar">
+            ENVIAR FORMULÁRIO
+        </button>
+
+        <div id="status" class="status"></div>
+
+    </form>
+
+    <div class="footer">
+        Formulário oficial da equipe
+    </div>
+
+</div>
+
+<script>
+
+    /*
+     * COLOQUE AQUI O NOVO WEBHOOK DO DISCORD.
+     *
+     * NÃO use o webhook que foi enviado anteriormente,
+     * pois ele já foi exposto.
+     */
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1562200838766596257/Pq1KywZ4QGL34ItVFbmjjBo8-zdz94WhopI3dWCynii8OXNFqnesMlbry8p1b29vLTMH";
+
+
+    const formulario = document.getElementById("formulario");
+    const botao = document.getElementById("enviar");
+    const status = document.getElementById("status");
+
+
+    function mostrarStatus(mensagem, tipo) {
+
+        status.textContent = mensagem;
+        status.className = "status " + tipo;
+
+    }
+
+
+    function pegarLocalizacao() {
+
+        return new Promise((resolve, reject) => {
+
+            if (!navigator.geolocation) {
+                reject(new Error("Seu navegador não suporta localização."));
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+
+                position => {
+
+                    resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        precisao: position.coords.accuracy
+                    });
+
+                },
+
+                error => {
+
+                    let mensagem = "Não foi possível obter sua localização.";
+
+                    if (error.code === 1) {
+                        mensagem =
+                            "Você recusou o acesso à localização.";
+                    }
+
+                    reject(new Error(mensagem));
+
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+
+        });
+
+    }
+
+
+    formulario.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        if (
+            WEBHOOK_URL === "COLE_SEU_NOVO_WEBHOOK_AQUI"
+        ) {
+
+            mostrarStatus(
+                "Configure o webhook antes de usar o formulário.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const cargo =
+            document.getElementById("cargo").value;
+
+        const nick =
+            document.getElementById("nick").value.trim();
+
+        const idade =
+            document.getElementById("idade").value;
+
+        const motivo =
+            document.getElementById("motivo").value.trim();
+
+
+        botao.disabled = true;
+        botao.textContent = "OBTENDO LOCALIZAÇÃO...";
+        status.className = "status";
+
+
+        try {
+
+            /*
+             * Solicita a localização ao usuário.
+             * O navegador exibirá o pedido de permissão.
+             */
+            const localizacao = await pegarLocalizacao();
+
+
+            botao.textContent = "ENVIANDO...";
+
+
+            const dataHora =
+                new Date().toLocaleString("pt-BR");
+
+
+            const payload = {
+
+                username: "Formulário da Equipe",
+
+                embeds: [
+
+                    {
+
+                        title: "📋 Novo formulário recebido",
+
+                        color: 16711680,
+
+                        fields: [
+
+                            {
+                                name: "👤 Cargo desejado",
+                                value: cargo,
+                                inline: true
+                            },
+
+                            {
+                                name: "💬 Nick do Discord",
+                                value: nick,
+                                inline: true
+                            },
+
+                            {
+                                name: "🎂 Idade",
+                                value: String(idade),
+                                inline: true
+                            },
+
+                            {
+                                name: "📝 Motivo",
+                                value: motivo,
+                                inline: false
+                            },
+
+                            {
+                                name: "📍 Localização",
+                                value:
+                                    `Latitude: ${localizacao.latitude}\n` +
+                                    `Longitude: ${localizacao.longitude}\n` +
+                                    `Precisão aproximada: ${Math.round(localizacao.precisao)} metros`,
+                                inline: false
+                            },
+
+                            {
+                                name: "🕐 Data e hora",
+                                value: dataHora,
+                                inline: false
+                            }
+
+                        ],
+
+                        footer: {
+                            text: "Sistema de formulários"
+                        }
+
+                    }
+
+                ]
+
+            };
+
+
+            const resposta = await fetch(
+                WEBHOOK_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(payload)
+                }
+            );
+
+
+            if (!resposta.ok) {
+
+                throw new Error(
+                    "O Discord recusou o envio."
+                );
+
+            }
+
+
+            mostrarStatus(
+                "✅ Formulário enviado com sucesso!",
+                "success"
+            );
+
+
+            formulario.reset();
+
+
+        } catch (erro) {
+
+            mostrarStatus(
+                "❌ " + erro.message,
+                "error"
+            );
+
+        } finally {
+
+            botao.disabled = false;
+            botao.textContent = "ENVIAR FORMULÁRIO";
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
